@@ -5,6 +5,7 @@ import cn.edu.hitsz.compiler.symtab.SymbolTable;
 import cn.edu.hitsz.compiler.utils.FileUtils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -18,6 +19,8 @@ import java.util.stream.StreamSupport;
  */
 public class LexicalAnalyzer {
     private final SymbolTable symbolTable;
+    private final ArrayList<Token> tokenList = new ArrayList<>();
+    private String codeList;
 
     public LexicalAnalyzer(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
@@ -31,15 +34,17 @@ public class LexicalAnalyzer {
      */
     public void loadFile(String path) throws IOException {
         // TODO: 词法分析前的缓冲区实现
-        List codeList = null;
         File file = new File(path);
         BufferedReader br
                 = new BufferedReader(new FileReader(file));
+        StringBuilder sb
+                = new StringBuilder();
         String st;
         while ((st = br.readLine()) != null) {
-            codeList.add(st);
+            sb.append(st).append('\n');
         }
-        throw new NotImplementedException();
+        codeList = sb.toString();
+        br.close();
     }
 
     /**
@@ -48,8 +53,118 @@ public class LexicalAnalyzer {
      */
     public void run() {
         // TODO: 自动机实现的词法分析过程
+        // 用ASCII码区别字符0-9，a-z，A-Z
+        int state = 0;
+        String symbol = "";
+        int len = codeList.length();
+        for (int i = 0; i < len; i++) {
+            char ch = codeList.charAt(i);
+            switch (state) {
+                // 初始状态
+                case 0 :
+                    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_') {
+                        symbol += ch;
+                        state = 1;
+                    } else if (ch >= '0' && ch <= '9') {
+                        symbol += ch;
+                        state = 2;
+                    } else if (ch == '=') {
+                        state = 3;
+                    } else if (ch == ',') {
+                        state = 4;
+                    } else if (ch == ';') {
+                        state = 5;
+                    } else if (ch == '+') {
+                        state = 6;
+                    } else if (ch == '-') {
+                        state = 7;
+                    } else if (ch == '*') {
+                        state = 8;
+                    } else if (ch == '/') {
+                        state = 9;
+                    } else if (ch == '(') {
+                        state = 10;
+                    } else if (ch == ')') {
+                        state = 11;
+                    } else {
+                        state = 0;
+                    }
+                    break;
+                // 标识符
+                case 1 :
+                    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_' || (ch >= '0' && ch <= '9')) {
+                        symbol += ch;
+                        state = state;
+                    // 加入tokenlist，并重置状态state=0,symbol=“”
+                    } else {
+                        if (symbol.equals("int")) {
+                            tokenList.add(Token.simple("int"));
+                        } else if (symbol.equals("return")) {
+                            tokenList.add(Token.simple("return"));
+                        } else {
+                            tokenList.add(Token.normal("id",symbol));
+                            // 检查符号表中是否存在，否则添加
+                            if (!symbolTable.has(symbol)) {
+                                symbolTable.add(symbol);
+                            }
+                        }
+                        // 重置
+                        state = 0;
+                        symbol = "";
+                    }
+                    break;
+                case 2 :
+                    if (ch >= '0' && ch <= '9') {
+                        symbol += ch;
+                        state = state;
+                    } else {
+                        tokenList.add(Token.normal("IntConst",symbol));
 
-        throw new NotImplementedException();
+                        state = 0;
+                        symbol = "";
+                    }
+                    break;
+                case 3 :
+                    state = 0;
+                    tokenList.add(Token.simple("="));
+                    break;
+                case 4 :
+                    state = 0;
+                    tokenList.add(Token.simple(","));
+                    break;
+                case 5 :
+                    state = 0;
+                    tokenList.add(Token.simple("Semicolon"));
+                    break;
+                case 6 :
+                    state = 0;
+                    tokenList.add(Token.simple("+"));
+                    break;
+                case 7 :
+                    state = 0;
+                    tokenList.add(Token.simple("-"));
+                    break;
+                case 8 :
+                    state = 0;
+                    tokenList.add(Token.simple("*"));
+                    break;
+                case 9 :
+                    state = 0;
+                    tokenList.add(Token.simple("/"));
+                    break;
+                case 10 :
+                    state = 0;
+                    tokenList.add(Token.simple("("));
+                    break;
+                case 11 :
+                    state = 0;
+                    tokenList.add(Token.simple(")"));
+                    break;
+                default:
+                    state = state;
+            }
+        }
+        tokenList.add(Token.eof());
     }
 
     /**
