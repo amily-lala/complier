@@ -18,9 +18,16 @@ import java.util.stream.StreamSupport;
  * @see TokenKind 词法单元类型的实现
  */
 public class LexicalAnalyzer {
+    /**
+     * 符号表
+     * token list
+     */
     private final SymbolTable symbolTable;
     private final ArrayList<Token> tokenList = new ArrayList<>();
-    private String codeList;
+    /**
+     * input_code
+      */
+    private String inputCode;
 
     public LexicalAnalyzer(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
@@ -37,14 +44,15 @@ public class LexicalAnalyzer {
         File file = new File(path);
         BufferedReader br
                 = new BufferedReader(new FileReader(file));
+        // 处理字符串
         StringBuilder sb
                 = new StringBuilder();
         String st;
         while ((st = br.readLine()) != null) {
             sb.append(st).append('\n');
         }
-        codeList = sb.toString();
         br.close();
+        inputCode = sb.toString();
     }
 
     /**
@@ -53,12 +61,12 @@ public class LexicalAnalyzer {
      */
     public void run() {
         // TODO: 自动机实现的词法分析过程
-        // 用ASCII码区别字符0-9，a-z，A-Z
+        // 用switch语句实现自动机
         int state = 0;
         String symbol = "";
-        int len = codeList.length();
+        int len = inputCode.length();
         for (int i = 0; i < len; i++) {
-            char ch = codeList.charAt(i);
+            char ch = inputCode.charAt(i);
             switch (state) {
                 // 初始状态
                 case 0 :
@@ -87,6 +95,7 @@ public class LexicalAnalyzer {
                     } else if (ch == ')') {
                         state = 11;
                     } else {
+                        // 遇到“ ” “\n"，回到初始状态
                         state = 0;
                     }
                     break;
@@ -113,6 +122,7 @@ public class LexicalAnalyzer {
                         symbol = "";
                     }
                     break;
+                // 数字
                 case 2 :
                     if (ch >= '0' && ch <= '9') {
                         symbol += ch;
@@ -124,6 +134,7 @@ public class LexicalAnalyzer {
                         symbol = "";
                     }
                     break;
+                // 运算符号 & 分隔符号
                 case 3 :
                     state = 0;
                     tokenList.add(Token.simple("="));
@@ -177,7 +188,7 @@ public class LexicalAnalyzer {
         // 词法分析过程可以使用 Stream 或 Iterator 实现按需分析
         // 亦可以直接分析完整个文件
         // 总之实现过程能转化为一列表即可
-        throw new NotImplementedException();
+        return tokenList;
     }
 
     public void dumpTokens(String path) {
