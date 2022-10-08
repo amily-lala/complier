@@ -5,6 +5,7 @@ import cn.edu.hitsz.compiler.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,7 +16,8 @@ import java.util.Map;
  * 其在代码中的作用可能并不明显, 但我们希望同学们可以借此体验符号表的设计思想.
  */
 public class SymbolTable {
-
+    // hashMap<K,V)
+    HashMap<String,SymbolTableEntry> symbolTable = new HashMap<>();
     /**
      * 获取符号表中已有的条目
      *
@@ -24,7 +26,13 @@ public class SymbolTable {
      * @throws RuntimeException 该符号在表中不存在
      */
     public SymbolTableEntry get(String text) {
-        throw new NotImplementedException();
+        // 检查text符号是否存在
+        if (!symbolTable.containsKey(text)) {
+            // 不存在，返回RuntimeException
+            throw new RuntimeException();
+        }
+        // 存在，返回该条目，形如：(a,INT)
+        return symbolTable.get(text);
     }
 
     /**
@@ -35,7 +43,14 @@ public class SymbolTable {
      * @throws RuntimeException 该符号已在表中存在
      */
     public SymbolTableEntry add(String text) {
-        throw new NotImplementedException();
+        // 检查待加入的text符号是否存在
+        if (symbolTable.containsKey(text)) {
+            // 存在，返回RuntimeException
+            throw new RuntimeException();
+        }
+        // 不存在，加入新符号，并返回新条目
+        symbolTable.put(text,new SymbolTableEntry(text));
+        return symbolTable.get(text);
     }
 
     /**
@@ -45,7 +60,7 @@ public class SymbolTable {
      * @return 该符号的条目是否位于符号表中
      */
     public boolean has(String text) {
-        throw new NotImplementedException();
+        return symbolTable.containsKey(text);
     }
 
     /**
@@ -54,7 +69,7 @@ public class SymbolTable {
      * @return 符号表的所有条目
      */
     private Map<String, SymbolTableEntry> getAllEntries() {
-        throw new NotImplementedException();
+        return symbolTable;
     }
 
     /**
