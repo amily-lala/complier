@@ -40,7 +40,7 @@ public final class FilePathConfig {
     /**
      * 规约出的产生式列表
      */
-    public static final String PARSER_PATH = "template/data/out/parser_list.txt";
+    public static final String PARSER_PATH = "D://template//template//data//out//parser_list.txt";
 
     /**
      * 语义分析后的符号表

@@ -53,6 +53,7 @@ public class LexicalAnalyzer {
         }
         br.close();
         inputCode = sb.toString();
+//        System.out.println(inputCode);
     }
 
     /**
@@ -67,6 +68,7 @@ public class LexicalAnalyzer {
         int len = inputCode.length();
         for (int i = 0; i < len; i++) {
             char ch = inputCode.charAt(i);
+            System.out.println(ch+" "+state);
             switch (state) {
                 // 初始状态
                 case 0 :
@@ -76,26 +78,25 @@ public class LexicalAnalyzer {
                     } else if (ch >= '0' && ch <= '9') {
                         symbol += ch;
                         state = 2;
-                    } else if (ch == '=') {
-                        state = 3;
-                    } else if (ch == ',') {
-                        state = 4;
                     } else if (ch == ';') {
-                        state = 5;
+                    tokenList.add(Token.simple("Semicolon"));
                     } else if (ch == '+') {
-                        state = 6;
+                        tokenList.add(Token.simple("+"));
                     } else if (ch == '-') {
-                        state = 7;
+                        tokenList.add(Token.simple("-"));
                     } else if (ch == '*') {
-                        state = 8;
+                        tokenList.add(Token.simple("*"));
                     } else if (ch == '/') {
-                        state = 9;
-                    } else if (ch == '(') {
-                        state = 10;
+                        tokenList.add(Token.simple("/"));
                     } else if (ch == ')') {
-                        state = 11;
+                        tokenList.add(Token.simple(")"));
+                    } else if (ch == '(') {
+                        tokenList.add(Token.simple("("));
+                    } else if (ch == '=') {
+                        tokenList.add(Token.simple("="));
+                    } else if (ch == ',') {
+                        tokenList.add(Token.simple(","));
                     } else {
-                        // 遇到“ ” “\n"，回到初始状态
                         state = 0;
                     }
                     break;
@@ -120,6 +121,26 @@ public class LexicalAnalyzer {
                         // 重置
                         state = 0;
                         symbol = "";
+
+                        if (ch == ';') {
+                            tokenList.add(Token.simple("Semicolon"));
+                        } else if (ch == '+') {
+                            tokenList.add(Token.simple("+"));
+                        } else if (ch == '-') {
+                            tokenList.add(Token.simple("-"));
+                        } else if (ch == '*') {
+                            tokenList.add(Token.simple("*"));
+                        } else if (ch == '/') {
+                            tokenList.add(Token.simple("/"));
+                        } else if (ch == ')') {
+                            tokenList.add(Token.simple(")"));
+                        } else if (ch == '(') {
+                            tokenList.add(Token.simple("("));
+                        } else if (ch == '=') {
+                            tokenList.add(Token.simple("="));
+                        } else if (ch == ',') {
+                            tokenList.add(Token.simple(","));
+                        }
                     }
                     break;
                 // 数字
@@ -132,50 +153,33 @@ public class LexicalAnalyzer {
 
                         state = 0;
                         symbol = "";
+                        if (ch == ';') {
+                            tokenList.add(Token.simple("Semicolon"));
+                        } else if (ch == '+') {
+                            tokenList.add(Token.simple("+"));
+                        } else if (ch == '-') {
+                            tokenList.add(Token.simple("-"));
+                        } else if (ch == '*') {
+                            tokenList.add(Token.simple("*"));
+                        } else if (ch == '/') {
+                            tokenList.add(Token.simple("/"));
+                        } else if (ch == ')') {
+                            tokenList.add(Token.simple(")"));
+                        } else if (ch == '(') {
+                            tokenList.add(Token.simple("("));
+                        } else if (ch == '=') {
+                            tokenList.add(Token.simple("="));
+                        } else if (ch == ',') {
+                            tokenList.add(Token.simple(","));
+                        }
                     }
-                    break;
-                // 运算符号 & 分隔符号
-                case 3 :
-                    state = 0;
-                    tokenList.add(Token.simple("="));
-                    break;
-                case 4 :
-                    state = 0;
-                    tokenList.add(Token.simple(","));
-                    break;
-                case 5 :
-                    state = 0;
-                    tokenList.add(Token.simple("Semicolon"));
-                    break;
-                case 6 :
-                    state = 0;
-                    tokenList.add(Token.simple("+"));
-                    break;
-                case 7 :
-                    state = 0;
-                    tokenList.add(Token.simple("-"));
-                    break;
-                case 8 :
-                    state = 0;
-                    tokenList.add(Token.simple("*"));
-                    break;
-                case 9 :
-                    state = 0;
-                    tokenList.add(Token.simple("/"));
-                    break;
-                case 10 :
-                    state = 0;
-                    tokenList.add(Token.simple("("));
-                    break;
-                case 11 :
-                    state = 0;
-                    tokenList.add(Token.simple(")"));
                     break;
                 default:
                     state = state;
             }
         }
         tokenList.add(Token.eof());
+//        System.out.println(tokenList);
     }
 
     /**
