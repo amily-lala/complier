@@ -62,9 +62,9 @@ public class Main {
         // 执行语法解析并在解析过程中依次调用各 Observer
         parser.run();
 
-/*        // 各 Observer 输出结果
+        // 各 Observer 输出结果
         productionCollector.dumpToFile(FilePathConfig.PARSER_PATH);
-        symbolTable.dumpTable(FilePathConfig.NEW_SYMBOL_TABLE);
+        /*symbolTable.dumpTable(FilePathConfig.NEW_SYMBOL_TABLE);
         final var instructions = irGenerator.getIR();
         irGenerator.dumpIR(FilePathConfig.INTERMEDIATE_CODE_PATH);
 
@@ -76,6 +76,6 @@ public class Main {
         final var asmGenerator = new AssemblyGenerator();
         asmGenerator.loadIR(instructions);
         asmGenerator.run();
-        asmGenerator.dump(FilePathConfig.ASSEMBLY_LANGUAGE_PATH);*/
+        asmGenerator.dump(FilePathConfig.ASSEMBLY_LANGUAGE_PATH)*/;
     }
 }

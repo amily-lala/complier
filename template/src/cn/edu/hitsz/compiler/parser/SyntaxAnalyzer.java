@@ -36,7 +36,7 @@ public class SyntaxAnalyzer {
     private List<Token> tokenList = new ArrayList<>();
     private LRTable lrTable = null;
     private final List<ActionObserver> observers = new ArrayList<>();
-    private List<String> parseList = new ArrayList<>();
+//    private List<String> parseList = new ArrayList<>();
 
     public SyntaxAnalyzer(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
@@ -177,7 +177,7 @@ public class SyntaxAnalyzer {
 
                         // 打印归约式 并 写入文件
                         System.out.println("Reduce:"+production);
-                        parseList.add(production.toString());
+//                        parseList.add(production.toString());
                     }
 
                     case Accept -> {
@@ -186,7 +186,7 @@ public class SyntaxAnalyzer {
                         /**
                          * 将归约过程写入文件中：parse_list.txt
                          */
-                        FileUtils.writeLines(PARSER_PATH,parseList);
+//                        FileUtils.writeLines(PARSER_PATH,parseList);
                         return;
                     }
 
@@ -195,7 +195,7 @@ public class SyntaxAnalyzer {
                         /**
                          * 将归约过程写入文件中：parse_list.txt
                          */
-                        FileUtils.writeLines(PARSER_PATH,parseList);
+//                        FileUtils.writeLines(PARSER_PATH,parseList);
                         return;
                     }
 
