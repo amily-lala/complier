@@ -9,3 +9,11 @@
 (SUB, $5, $1, $4)
 (MOV, result, $5)
 (RET, , result)
+
+(MOV, a, 8)
+(MOV, b, 5)
+(MOV, $6, 3)
+(SUB, $0, $6, a)
+(MOV, c, $0)
+(ADD, $2, b, b)
+(MOV, result, $5)

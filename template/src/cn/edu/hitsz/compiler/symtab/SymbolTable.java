@@ -68,7 +68,7 @@ public class SymbolTable {
      *
      * @return 符号表的所有条目
      */
-    private Map<String, SymbolTableEntry> getAllEntries() {
+    public Map<String, SymbolTableEntry> getAllEntries() {
         return symbolTable;
     }
 
